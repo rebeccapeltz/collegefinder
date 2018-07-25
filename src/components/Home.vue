@@ -1,67 +1,65 @@
 <template>
-  <h1>Your future starts here.</h1>
-    <div id="app">
-      <dropdown :on-click='changeState' :items='states'></dropdown>
-      <p>Currently selected state: <span>{{activeState}}</span></p>
-    </div> 
+  <h1>Your future starts here.</h1> 
+      <div class="btn-group">
+          <li @click="toggleMenu()" class="dropdown-toggle" v-if="selectedOption.name !== undefined">
+            {{ selectedOption.name }}
+            <span class="caret"></span>
+          </li>
+
+          <li @click="toggleMenu()" class="dropdown-toggle" v-çif="selectedOption.name === undefined">
+            {{placeholderText}}
+            <span class="caret"></span>
+          </li>
+
+          <ul class="dropdown-menu" v-if="showMenu">
+              <li v-for="option in options">
+                  <a href="javascript:void(0)" @click="updateOption(option)">
+                      {{ option.name }}
+                  </a>
+              </li>
+          </ul>
+      </div> 
 </template>
 
 <script>
 export default {
-  name: 'Home',
-  data () {
-  }
-}
+        data() {
+            return {
+                selectedOption: {
+                  name: '',
+                },
+                showMenu: false,
+                placeholderText: 'Please select a State',
+            }
+        },
+        props: {
+            options: {
+                type: [Array, Object]
+            },
+            selected: {},
+            placeholder: [String]
+        },
 
-Vue.component('dropdown', {
-	template: `
-		<div>
-			<button @click='toggleShow' class='anchor'>Select a State</button>
-			<div v-if='showMenu' class='menu'>
-				<div class='menu-item' v-for='item in this.items' @click='itemClicked(item)'>{{item}}</div>
-			</div>
-		</div>
-	`,
-	data: function() {
-		return {
-			showMenu: false
-		}
-	},
-	props: {
-		onClick: 'function',
-		items: {
-			type: 'Object',
-			default: []
-		}
-	},
-	methods: {
-		toggleShow: function() {
-			this.showMenu = !this.showMenu;
-		},
-		itemClicked: function(item) {
-			this.toggleShow();
-			this.onClick(item);
-		}
-	}
-})
+        mounted() {
+            this.selectedOption = this.selected;
+            if (this.placeholder)
+            {
+                this.placeholderText = this.placeholder;
+            }
+        },
 
-const app = new Vue({
-	el: '#app',
-	data: {
-		activeState: 'Piano',
-		  statess: [
-			'Piano',
-			'Acoustic Guitar',
-			'Drums',
-			'Trumpet'
-		]
-	},
-	methods: {
-		changeState: function(state) {
-			this.activeState = state;
-		}
-	}
-})
+        methods: {
+            updateOption(option) {
+                this.selectedOption = option;
+                this.showMenu = false;
+                this.$emit('updateOption', this.selectedOption);
+            },
+
+            toggleMenu() {
+              this.showMenu = !this.showMenu;
+            }
+        }
+    }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -85,72 +83,99 @@ body, html {
     height: 100%;
 }
 
-.anchor {
-	  display: flex;
-		align-items: center;
-		justify-content: center;
-    border: 1px solid transparent;
-    padding: .75rem 2rem;
-    font-size: 1rem;
-    border-radius: .25rem;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-		color: #fff;
-    background-color: #27AE60;
-    border-color: #27AE60;
+.btn-group {
+  min-width: 160px;
+  height: 40px;
+  position: relative;
+  margin: 10px 1px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.btn-group a:hover {
+  text-decoration: none;
 }
 
-.anchor::after {
-		display: inline-block;
-    width: 0;
-    height: 0;
-    margin-left: .5em;
-    vertical-align: .255em;
-    content: "";
-    border-top: .3em solid;
-    border-right: .28em solid transparent;
-    border-bottom: 0;
-    border-left: .28em solid transparent;
+.dropdown-toggle {
+  color: #636b6f;
+  min-width: 160px;
+  padding: 10px;
+  text-transform: none;
+  font-weight: 300;
+  margin-bottom: 7px;
+  border: 0;
+  background-image: linear-gradient(#009688, #009688), linear-gradient(#D2D2D2, #D2D2D2);
+  background-size: 0 2px, 100% 1px;
+  background-repeat: no-repeat;
+  background-position: center bottom, center calc(100% - 1px);
+  background-color: transparent;
+  transition: background 0s ease-out;
+  float: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+.dropdown-toggle:hover {
+  background: #e1e1e1;
+  cursor: pointer;
 }
 
-.anchor:hover {
-	color: #fff;
-	background-color: #229954;
-	border-color: #229954;
-	cursor: pointer;
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  text-align: left;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
 }
 
-.menu {
-	background-color: #fff;
-	background-clip: padding-box;
-	border: 1px solid rgba(0,0,0,.15);
-	border-radius: .25rem;
-	color: #212529;
-	cursor: pointer;
-	display: flex;
-	flex-direction: column;
-	font-size: 1rem;
-	list-style: none;
-	margin: .125rem 0 0;
-	padding: .5rem 0;
-	position: absolute;
-	text-align: left;
+.dropdown-menu > li > a {
+  padding: 10px 30px;
+  display: block;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.6;
+  color: #333333;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.dropdown-menu > li > a:hover {
+  background: #efefef;
+  color: #409FCB;
 }
 
-.menu-item {
-	color: #212529;
-	padding: .25rem 1.5rem;
-	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+.dropdown-menu > li {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  margin: 0;
 }
 
-.menu-item:hover {
-	background-color: #F4F6F6;
-	cursor: pointer;
+.caret {
+  display: relative;
+  width: 0;
+  position: relative;
+  top: 10px;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px dashed;
+  border-top: 4px solid \9;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  float: right;
 }
 
-span {
-	font-weight: bold;
-	color: #229954;
-	font-size: 1.25rem;
+li {
+    list-style: none;
 }
 
 
