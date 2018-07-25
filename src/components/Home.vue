@@ -1,70 +1,29 @@
 <template>
   <h1>Your future starts here.</h1> 
-      <div class="btn-group">
-          <li @click="toggleMenu()" class="dropdown-toggle" v-if="selectedOption.name !== undefined">
-            {{ selectedOption.name }}
-            <span class="caret"></span>
-          </li>
-
-          <li @click="toggleMenu()" class="dropdown-toggle" v-çif="selectedOption.name === undefined">
-            {{placeholderText}}
-            <span class="caret"></span>
-          </li>
-
-          <ul class="dropdown-menu" v-if="showMenu">
-              <li v-for="option in options">
-                  <a href="javascript:void(0)" @click="updateOption(option)">
-                      {{ option.name }}
-                  </a>
-              </li>
-          </ul>
-      </div> 
+      
 </template>
 
 <script>
 export default {
-        data() {
-            return {
-                selectedOption: {
-                  name: '',
-                },
-                showMenu: false,
-                placeholderText: 'Please select a State',
-            }
-        },
-        props: {
-            options: {
-                type: [Array, Object]
-            },
-            selected: {},
-            placeholder: [String]
-        },
-
-        mounted() {
-            this.selectedOption = this.selected;
-            if (this.placeholder)
-            {
-                this.placeholderText = this.placeholder;
-            }
-        },
-
-        methods: {
-            updateOption(option) {
-                this.selectedOption = option;
-                this.showMenu = false;
-                this.$emit('updateOption', this.selectedOption);
-            },
-
-            toggleMenu() {
-              this.showMenu = !this.showMenu;
-            }
+  name: "Home",
+  data() {
+    return {
+      selectedOption: "",
+      states: [
+        {
+          name: "Alabama",
+          abbreviation: "AL"
         }
-    }
+      ]
+    };
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
 ul {
@@ -79,8 +38,9 @@ a {
   color: black;
 }
 
-body, html {
-    height: 100%;
+body,
+html {
+  height: 100%;
 }
 
 .btn-group {
@@ -103,7 +63,8 @@ body, html {
   font-weight: 300;
   margin-bottom: 7px;
   border: 0;
-  background-image: linear-gradient(#009688, #009688), linear-gradient(#D2D2D2, #D2D2D2);
+  background-image: linear-gradient(#009688, #009688),
+    linear-gradient(#d2d2d2, #d2d2d2);
   background-size: 0 2px, 100% 1px;
   background-repeat: no-repeat;
   background-position: center bottom, center calc(100% - 1px);
@@ -149,7 +110,7 @@ body, html {
 }
 .dropdown-menu > li > a:hover {
   background: #efefef;
-  color: #409FCB;
+  color: #409fcb;
 }
 
 .dropdown-menu > li {
@@ -175,8 +136,6 @@ body, html {
 }
 
 li {
-    list-style: none;
+  list-style: none;
 }
-
-
 </style>
