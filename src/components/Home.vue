@@ -1,6 +1,11 @@
 <template>
   <h1>Your future starts here.</h1> 
-      
+  <select v-model="selected">
+    <option v-for="state in states" v-bind:value="state.value">
+      {{ option.text }}
+    </option>
+  </select>
+  <span>Selected: {{ selected }}</span>      
 </template>
 
 <script>
@@ -8,7 +13,7 @@ export default {
   name: "Home",
   data() {
     return {
-      selectedOption: "",
+      selected: "",
       states: [
         {
           name: "Alabama",
