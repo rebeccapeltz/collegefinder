@@ -1,14 +1,17 @@
 <template>
-  <router-view>
+  
     <div id="app">
+      <router-view></router-view>
     </div>
-  </router-view>
+  
 </template>
 
 <script>
 import Home from './components/Home'
 import CollegeList from './components/CollegeList'
 import CollegeInfo from './components/CollegeInfo'
+
+
 
 export default {
   name: 'App',
